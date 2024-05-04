@@ -29,10 +29,11 @@ while True:
             if depositar < 1:
                 print("Você não pode depositar valores abaixo de R$1,00")
                 sleep(1.5)
-            print(f"Você depositou {depositar:.2f}")
-            extrato_deposito += str(f"   Depósito: +{depositar}\n")
-            saldo += depositar
-            sleep(1.5)
+            else:
+                print(f"Você depositou {depositar:.2f}")
+                extrato_deposito += str(f"   Depósito: +{depositar}\n")
+                saldo += depositar
+                sleep(1.5)
 
         elif opcao == 3:
             if saques == 3:
