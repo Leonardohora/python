@@ -14,7 +14,7 @@ menu =(f"""
 sleep(2)
 extrato_deposito = ""
 extrato_saque = ""
-saldo, saques = 0, 0
+saldo, SAQUES = 0, 0
 while True:
     print(menu)
     opcao = int(input("Qual das opções você deseja: "))
@@ -36,7 +36,7 @@ while True:
                 sleep(1.5)
 
         elif opcao == 3:
-            if saques == 3:
+            if SAQUES == 3:
                 print("Você ja sacou 3 vezes hoje, volte novamente amanhã.\n")
                 sleep(2)
             else:
@@ -48,7 +48,7 @@ while True:
                     print(f"Você sacou R${sacar:.2f} \n")
                     extrato_saque += str(f"   Saque: -{sacar}\n")
                     saldo -= sacar
-                    saques += 1
+                    SAQUES += 1
                 else:
                     print("Operação INVÁLIDA, você não pode ficar com o saldo NEGATIVO \n")
                     sleep(2)
