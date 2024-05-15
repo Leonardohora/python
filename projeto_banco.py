@@ -7,6 +7,7 @@ menu =(f"""
 2 - DEPOSITAR
 3 - SACAR
 4 - EXTRATO
+5 - CADASTRO
 0 - encerrar
 
 {"_-"*28}\n""")
@@ -18,7 +19,7 @@ saldo, SAQUES = 0, 0
 while True:
     print(menu)
     opcao = int(input("Qual das opções você deseja: "))
-    if opcao > -1 and opcao < 5:
+    if opcao > -1 and opcao < 6:
         print(opcao)
         if opcao == 1:
             print(f"Seu saldo atual é de R${saldo:.2f}")
@@ -60,11 +61,36 @@ while True:
             sleep(1.5)
             print(f"{extrato_saque}")
 
+        elif opcao == 5:
+            lista_cadastro = []
+            cadastro = []
+            cpf = str(input("Informe o seu CPF: "))
+            nome = str(input("Informe seu nome: "))
+            estado = str(input("Informe seu estado: "))
+
+            def cadastar(cpf,nome,estado):
+                global cadastrado
+                cadastro = {}
+                cadastro[cpf] = {}
+                cadastro[cpf].update({"nome":nome})
+                cadastro[cpf].update({"estado": estado})
+                lista_cadastro.append(cadastro)
+                cadastrado = lista_cadastro.copy()
+                lista_cadastro.clear()
+                print(cadastro)
+                    
+                
+
+            cadastar(cpf,nome,estado)
+            print(f"obrigado por se cadastrar em nosso banco Sr/Sra: {nome}")
+            print(f"Seu CPF É : {cpf} e você mora em {estado}")
+            print(f"Lista de cadastro: \n {cadastrado}")
+
         elif opcao == 0:
             print("Volte sempre")
             break
     else:
         print("VOCÊ NÃO DIGITOU UMA OPÇÃO VÁLIDA. tente novamente")
         sleep(2)
-
+print(cadastro)
 print("FIM DO PROGRAMA")
