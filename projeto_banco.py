@@ -1,7 +1,7 @@
 from time import sleep
 lista_cadastro = []
 numero_conta = 0
-
+conta_encontrada = None
 menu1 = (f"""
 {"_-"*7} Bem vindo ao Banco da Valve {"_-"*7}
 
@@ -11,12 +11,43 @@ menu1 = (f"""
 
 {"_-"*28}\n""")
 
+def cadastrar(cpf, nome, idade, estado, numero_conta):
+            cadastro = {
+                "cpf": cpf,
+                "nome": nome,
+                "idade": idade,
+                "estado": estado,
+                "numero_conta": numero_conta,
+                "saldo": 0,
+                "saques": 0,
+                "extrato": []
+            }
+            lista_cadastro.append(cadastro)
+            print(cadastro)
+
+
+def deposito(depositar, conta_encontrada):
+        print(f"Você depositou R${depositar:.2f}")
+        conta_encontrada['saldo'] += depositar
+        conta_encontrada['extrato'].append(f"Depósito: +R${depositar:.2f}")
+
+
+def saque(conta_encontrada, sacar):
+    conta_encontrada['saldo'] -= sacar
+    conta_encontrada['saques'] += 1
+    conta_encontrada['extrato'].append(f"Saque: -R${sacar:.2f}")
+
+
+def extrato(conta_encontrada):
+    for transacao in conta_encontrada['extrato']:
+        print(transacao)
+
+
 while True:
     print(menu1)
     escolha = int(input("Escolha uma dessas opções: "))
     if escolha == 1:
         cpf_cadastrado = str(input("Digite seu CPF: "))
-        conta_encontrada = None
         for dicionario in lista_cadastro:
             if dicionario.get("cpf") == cpf_cadastrado:
                 conta_encontrada = dicionario
@@ -55,36 +86,31 @@ while True:
                         print("Você não pode depositar valores abaixo de R$1,00")
                         sleep(1.5)
                     else:
-                        print(f"Você depositou R${depositar:.2f}")
-                        conta_encontrada['saldo'] += depositar
-                        conta_encontrada['extrato'].append(f"Depósito: +R${depositar:.2f}")
+                        deposito(depositar, conta_encontrada)
                         sleep(1.5)
 
                 elif opcao == 3:
                     if conta_encontrada['saques'] == 3:
                         print("Você já sacou 3 vezes hoje, volte novamente amanhã.\n")
                         sleep(2)
+
                     else:
                         sacar = float(input(f"Quanto deseja sacar? "))
                         if sacar > 500:
                             print("Você só pode sacar valor abaixo ou igual a R$500,00 \n")
                             sleep(1.5)
+
                         elif conta_encontrada['saldo'] >= sacar:
-                            print(f"Você sacou R${sacar:.2f} \n")
-                            conta_encontrada['saldo'] -= sacar
-                            conta_encontrada['saques'] += 1
-                            conta_encontrada['extrato'].append(f"Saque: -R${sacar:.2f}")
+                            saque(conta_encontrada, sacar)
                             sleep(1.5)
+
                         else:
                             print("Operação INVÁLIDA, você não pode ficar com o saldo NEGATIVO \n")
                             sleep(2)
 
                 elif opcao == 4:
                     print(f"Seu extrato é:\n")
-                    sleep(1.5)
-                    for transacao in conta_encontrada['extrato']:
-                        print(transacao)
-                    sleep(1.5)
+                    extrato(conta_encontrada)
 
                 elif opcao == 0:
                     print("Volte sempre")
@@ -98,20 +124,6 @@ while True:
         nome = str(input("Informe seu nome: "))
         idade = int(input("Informe sua idade: "))
         estado = str(input("Informe seu estado: "))
-
-        def cadastrar(cpf, nome, idade, estado, numero_conta):
-            cadastro = {
-                "cpf": cpf,
-                "nome": nome,
-                "idade": idade,
-                "estado": estado,
-                "numero_conta": numero_conta,
-                "saldo": 0,
-                "saques": 0,
-                "extrato": []
-            }
-            lista_cadastro.append(cadastro)
-            print(cadastro)
 
         numero_conta += 1
         cadastrar(cpf, nome, idade, estado, numero_conta)
