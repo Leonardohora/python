@@ -19,22 +19,22 @@ def cadastrar(cpf, nome, idade, estado, numero_conta):
                 "estado": estado,
                 "numero_conta": numero_conta,
                 "saldo": 0,
-                "saques": 0,
+                "limite_saques": 0,
                 "extrato": []
             }
             lista_cadastro.append(cadastro)
             print(cadastro)
 
 
-def deposito(depositar, conta_encontrada):
+def deposito(depositar, conta_encontrada, /):
         print(f"Você depositou R${depositar:.2f}")
         conta_encontrada['saldo'] += depositar
         conta_encontrada['extrato'].append(f"Depósito: +R${depositar:.2f}")
 
 
-def saque(conta_encontrada, sacar):
+def saque(*, conta_encontrada, sacar):
     conta_encontrada['saldo'] -= sacar
-    conta_encontrada['saques'] += 1
+    conta_encontrada['limite_saques'] += 1
     conta_encontrada['extrato'].append(f"Saque: -R${sacar:.2f}")
 
 
@@ -48,10 +48,10 @@ while True:
     escolha = int(input("Escolha uma dessas opções: "))
     if escolha == 1:
         cpf_cadastrado = str(input("Digite seu CPF: "))
-        for dicionario in lista_cadastro:
-            if dicionario.get("cpf") == cpf_cadastrado:
-                conta_encontrada = dicionario
-                print(f"Bem-vindo novamente, {dicionario['nome']}")
+        for lista_cpf in lista_cadastro:
+            if lista_cpf.get("cpf") == cpf_cadastrado:
+                conta_encontrada = lista_cpf
+                print(f"Bem-vindo novamente, {lista_cpf['nome']}")
                 break
 
         if not conta_encontrada:
@@ -90,7 +90,7 @@ while True:
                         sleep(1.5)
 
                 elif opcao == 3:
-                    if conta_encontrada['saques'] == 3:
+                    if conta_encontrada['limite_saques'] == 3:
                         print("Você já sacou 3 vezes hoje, volte novamente amanhã.\n")
                         sleep(2)
 
@@ -101,7 +101,7 @@ while True:
                             sleep(1.5)
 
                         elif conta_encontrada['saldo'] >= sacar:
-                            saque(conta_encontrada, sacar)
+                            saque(conta_encontrada=conta_encontrada, sacar=sacar)
                             sleep(1.5)
 
                         else:
@@ -110,7 +110,9 @@ while True:
 
                 elif opcao == 4:
                     print(f"Seu extrato é:\n")
+                    sleep(1)
                     extrato(conta_encontrada)
+                    sleep(1.5)
 
                 elif opcao == 0:
                     print("Volte sempre")
@@ -128,9 +130,10 @@ while True:
         numero_conta += 1
         cadastrar(cpf, nome, idade, estado, numero_conta)
         
-        print(f"Obrigado por se cadastrar em nosso banco Sr/Sra: {nome}")
-        print(f"Seu CPF é: {cpf}, sua idade é {idade}, e você mora em {estado}")
-        print(lista_cadastro)
+        print(f"""Obrigado por se cadastrar em nosso banco Sr/Sra: {nome}
+                  Seu CPF é: {cpf}, sua idade é {idade}, e você mora em {estado}
+                  O Numero da sua conta é {numero_conta}""")
+
 
     elif escolha == 0:
         break
