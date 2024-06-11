@@ -102,9 +102,6 @@ while rodando:
         no_ar = False
     
     # Verificar colisão
-    if colisao(circulo, quadrado):
-        if novorecorde == recorde:
-            novorecorde = recorde
         pontos = 0
         circulo_vel = 5
         circulo[0] = largura + raio  # Redefine a posição do círculo
