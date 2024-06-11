@@ -41,19 +41,19 @@ novorecorde = 0
 
 def dificuldade(pontos, circulo_vel):
     if pontos >= 10 and pontos < 20:
-        circulo_vel += 0.1
+        circulo_vel += 0.001
         
     elif pontos >= 20 and pontos < 30:
-        circulo_vel += 0.2
+        circulo_vel += 0.002
         
     elif pontos >= 30 and pontos < 40:
-        circulo_vel += 0.3
+        circulo_vel += 0.003
         
     elif pontos >= 40 and pontos < 50:
-        circulo_vel += 0.4
+        circulo_vel += 0.004
         
     elif pontos >= 50 and pontos < 60:
-        circulo_vel += 0.5
+        circulo_vel += 0.005
         
     return circulo_vel
 
