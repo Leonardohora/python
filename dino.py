@@ -6,6 +6,7 @@ pygame.init()
 # Configurações do jogo
 # --------------------------------------------------
 velocidade_jogo = 60
+pygame.display.set_caption("olha o aviãozinho")
 tempodojogo = pygame.time.Clock()
 largura, altura = 1250, 720
 tela = pygame.display.set_mode((largura, altura))
@@ -102,6 +103,7 @@ while rodando:
         no_ar = False
     
     # Verificar colisão
+    if colisao(circulo, quadrado):
         pontos = 0
         circulo_vel = 5
         circulo[0] = largura + raio  # Redefine a posição do círculo
@@ -111,8 +113,8 @@ while rodando:
     mostrar_velocidade = fonte.render(f"Velocidade: {circulo_vel:.1f}", True, vermelho)
     mostrar_recorde = fonte.render(f"Recorde: {novorecorde}", True, verde)
     tela.blit(mostrar_recorde,(100, 150))
-    tela.blit(mostrar_velocidade,(100, 100))
-    tela.blit(mostrar_pontos, (100, 50))
+    tela.blit(mostrar_velocidade,(100, 50))
+    tela.blit(mostrar_pontos, (100, 100))
 
     pygame.draw.circle(tela, vermelho, circulo, raio)
     pygame.draw.rect(tela, preto, quadrado)
