@@ -61,6 +61,15 @@ def copiar():
     tela.clipboard_append(mostrar_senha["text"])
     
     
+def resetar():
+    senha_comprimento.delete(0,tk.END)
+    opcao1.set(0)
+    opcao2.set(0)
+    opcao3.set(0)
+    opcao4.set(0)
+    mostrar_senha.config(text="")
+    
+    
 texto_comprimento = tk.Label(tela, text="Quantos Caracters será a senha?")
 texto_comprimento.grid()
 
@@ -83,9 +92,12 @@ botao_gerar = tk.Button(tela, text="Gerar senha", command=lambda: gerar_senha())
 botao_gerar.grid()
 
 mostrar_senha = tk.Label(tela, text="")
-mostrar_senha.grid(pady=10)
+mostrar_senha.grid(pady=5)
 
 botao_copiar_senha = tk.Button(tela, text="Copiar senha", command=lambda:copiar())
-botao_copiar_senha.grid()
+botao_copiar_senha.grid(pady=5)
+
+reset = tk.Button(tela, text="Resetar", command=resetar)
+reset.grid(pady=4)
 
 tela.mainloop()
