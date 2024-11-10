@@ -51,16 +51,9 @@ class GeradorSenhas:
         # Botão de gerar senha
         tk.Button(self.tela, text="Gerar Senha", command=self.gerar_senha, bg="#00CED1", fg="#000000", font=("Arial", 10, "bold"), width=15).grid(column=0, row=5, columnspan=2, pady=10)
 
-        # Exibir senha gerada
-        tk.Label(self.tela, text="Sua senha:", bg="#2E2E2E", fg="#FFFFFF").grid(column=0, row=6, sticky="w")
-        self.mostrar_senha = tk.Label(self.tela, text="", bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"))
-        self.mostrar_senha.grid(column=1, row=6)
-
-        # outros botões
-        tk.Button(self.tela, text="Copiar", command=self.copiar, bg="#1E90FF", fg="#FFFFFF").grid(column=1, row=8, pady=5, sticky="e")
-        tk.Button(self.tela, text="Resetar", command=self.reset, bg="#FF4500", fg="#FFFFFF").grid(column=0, row=8, pady=5, sticky="w")
 
     def gerar_senha(self):
+        
         if not self.senha_comprimento.get().isnumeric() or int(self.senha_comprimento.get()) < 8 or int(self.senha_comprimento.get()) > 20:
             messagebox.showinfo("AVISO", "Insira apenas números entre 8 e 20.")
             return
@@ -68,21 +61,36 @@ class GeradorSenhas:
         if not (self.minusculo.get() or self.maisculo.get() or self.numero.get() or self.simbolo.get()):
             messagebox.showinfo("AVISO", "Selecione pelo menos uma opção.")
             return
+        
+        
+        else:
+            comprimento = int(self.senha_comprimento.get())
+            caracters = ''
+        
+            # Exibir senha gerada
+            tk.Label(self.tela, text="Sua senha:", bg="#2E2E2E", fg="#FFFFFF").grid(column=0, row=6, sticky="w")
+            self.mostrar_senha = tk.Label(self.tela, text="", bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"))
+            self.mostrar_senha.grid(column=1, row=6)
+            
+            #outros Botões
+            copia = tk.Button(self.tela, text="Copiar", command=self.copiar, bg="#1E90FF", fg="#FFFFFF")
+            copia.grid(column=1, row=8, pady=5, sticky="e")
+            
+            reseta = tk.Button(self.tela, text="Resetar", command=self.reset, bg="#FF4500", fg="#FFFFFF")
+            reseta.grid(column=0, row=8, pady=5, sticky="w")
+            
+            
+            if self.minusculo.get():
+                caracters += str.ascii_lowercase
+            if self.maisculo.get():
+                caracters += str.ascii_uppercase
+            if self.numero.get():
+                caracters += str.digits
+            if self.simbolo.get():
+                caracters += str.punctuation
 
-        comprimento = int(self.senha_comprimento.get())
-        caracters = ''
-
-        if self.minusculo.get():
-            caracters += str.ascii_lowercase
-        if self.maisculo.get():
-            caracters += str.ascii_uppercase
-        if self.numero.get():
-            caracters += str.digits
-        if self.simbolo.get():
-            caracters += str.punctuation
-
-        senha = ''.join(rd.choice(caracters) for _ in range(comprimento))
-        self.mostrar_senha.config(text=f'{senha}')
+            senha = ''.join(rd.choice(caracters) for _ in range(comprimento))
+            self.mostrar_senha.config(text=f'{senha}')
 
 
     def copiar(self):
