@@ -3,101 +3,94 @@ import tkinter as tk
 import random as rd
 import string as str
 from tkinter import messagebox
-#configuração da janela
-tela = tk.Tk()
-tela.title("Gerador de senhas")
 
-
-bvindas = tk.Label(tela, text="Boas vindas ao Gerador de senhas.", bg="blue")
-bvindas.grid()
-
-#variaveís de controle, serve para saber se as opções estão marcadas ou não. 1 = sim/0 == não
-
-opcao1 = tk.IntVar()
-opcao2 = tk.IntVar()
-opcao3 = tk.IntVar()
-opcao4 = tk.IntVar()
-
-
-#função para gerar senha.
-def gerar_senha():
-    
-    if not senha_comprimento.get().isnumeric():
-        messagebox.showinfo("Aviso", "Digite apenas Números.")
+class GeradorSenhas:
+    def __init__(self):
+        #tela e titulo
+        self.tela = tk.Tk()
+        self.tela.title("Gerador de Senhas")
         
-    else:
-        comprimento = int(senha_comprimento.get())    
-        letras = ''
+        self.minusculo = tk.IntVar()
+        self.maisculo = tk.IntVar()
+        self.numero = tk.IntVar()
+        self.simbolo = tk.IntVar()
+        self.config_janela()
+    
+    
+    def config_janela(self):
         
-        if comprimento >= 8 and comprimento <= 20:
-            
-            if opcao1.get() == 1:
-                letras += str.punctuation
-                
-            if opcao2.get() == 1:
-                letras += str.digits
-                
-            if opcao3.get() == 1:
-                letras += str.ascii_uppercase
-                
-            if opcao4.get() == 1:
-                letras+= str.ascii_lowercase
-                
-            if opcao1.get() == 0 and opcao2.get() == 0 and opcao3.get() == 0 and opcao4.get() == 0:
-                messagebox.showinfo("Aviso", "Marque pelo menos uma das opções.")
-                return
+        boas_vindas = tk.Label(self.tela, text="Bem vindo ao gerador de senhas",fg="blue", font="Arial" )
+        boas_vindas.grid(column=0, row=0, padx=5)
+
+        quantidades_caracters = tk.Label(self.tela, text="Quantos caracters terá sua senha?")
+        quantidades_caracters.grid()
+        
+        self.senha_comprimento = tk.Entry(self.tela)
+        self.senha_comprimento.grid()
+        
+        tk.Checkbutton(self.tela,text="Conter Letras minusculas", variable=self.minusculo).grid()
+        tk.Checkbutton(self.tela,text="Conter Letras maiúsculas", variable=self.maisculo).grid()
+        tk.Checkbutton(self.tela, text="Conter Números", variable= self.numero).grid()
+        tk.Checkbutton(self.tela, text="Conter Símbolos", variable=self.simbolo).grid()
+        
+        tk.Button(self.tela,text="Gerar senha", command=self.gerar_senha).grid()
+        self.mostrar_senha = tk.Label(self.tela, text="")
+        tk.Label(self.tela,text="Sua senha é:").grid()
+        self.mostrar_senha.grid()
+        
+        tk.Button(self.tela, text="Copiar", command=self.copiar).grid()
+        tk.Button(self.tela, text="Reset",command=self.reset).grid()
+        
+        
+    def gerar_senha(self):
+        
+        if not self.senha_comprimento.get().isnumeric() or int(self.senha_comprimento.get()) < 8 or int(self.senha_comprimento.get()) > 20 :
+            messagebox.showinfo("AVISO", "Insira apenas números de 8 a 20 Caracteres.")
+            return
+        
+        if not (self.minusculo.get() or self.maisculo.get() or self.numero.get() or self.simbolo.get()):
+            messagebox.showinfo("AVISO", "Marque pelo menos uma das opções")
+            return        
+        
+
+        comprimento = int(self.senha_comprimento.get())
+        caracters = ''
+        
+        if self.minusculo.get():
+            caracters += str.ascii_lowercase
+        
+        if self.maisculo.get():
+            caracters += str.ascii_uppercase
+
+        if self.numero.get():
+            caracters += str.digits
+         
+        if self.simbolo.get():
+            caracters += str.punctuation
+        
+        senha = ''.join(rd.choice(caracters) for _ in range(comprimento))
+        self.mostrar_senha.config(text=f'{senha}')
     
-            
-            senha = ''.join(rd.choice(letras) for _ in range(comprimento))
-            mostrar_senha.config(text=f"A senha é: {senha}")
-            
-        else:
-                messagebox.showinfo("Aviso", "Sua senha deverá entre 8 e 20 caracetrs")
-
-
-#função para copiar a senha
-def copiar():
-    tela.clipboard_clear()
-    tela.clipboard_append(mostrar_senha["text"])
     
+    def copiar(self):
+        self.tela.clipboard_clear()
+        self.tela.clipboard_append(self.mostrar_senha["text"])
+        
     
-def resetar():
-    senha_comprimento.delete(0,tk.END)
-    opcao1.set(0)
-    opcao2.set(0)
-    opcao3.set(0)
-    opcao4.set(0)
-    mostrar_senha.config(text="")
-    
-    
-texto_comprimento = tk.Label(tela, text="Quantos Caracters será a senha?")
-texto_comprimento.grid()
+    def reset(self):
+        self.senha_comprimento.delete(0, tk.END)
+        self.maisculo.set(0)
+        self.minusculo.set(0)
+        self.numero.set(0)
+        self.simbolo.set(0)
+        self.mostrar_senha.config(text="")
+        
+        
+    def rodar(self):
+        self.tela.mainloop()
+        
 
-senha_comprimento = tk.Entry(tela)
-senha_comprimento.grid()
-
-chk_simbolo1 = tk.Checkbutton(tela, text="Símbolos", variable=opcao1)
-chk_simbolo1.grid()
-
-chk_simbolo2 = tk.Checkbutton(tela, text="Números", variable=opcao2)
-chk_simbolo2.grid()
-
-chk_simbolo4 = tk.Checkbutton(tela, text="Letras minusculas", variable=opcao4)
-chk_simbolo4.grid()
-
-chk_simbolo3 = tk.Checkbutton(tela, text="Letras maisculas", variable=opcao3)
-chk_simbolo3.grid()
-
-botao_gerar = tk.Button(tela, text="Gerar senha", command=lambda: gerar_senha())
-botao_gerar.grid()
-
-mostrar_senha = tk.Label(tela, text="")
-mostrar_senha.grid(pady=5)
-
-botao_copiar_senha = tk.Button(tela, text="Copiar senha", command=lambda:copiar())
-botao_copiar_senha.grid(pady=5)
-
-reset = tk.Button(tela, text="Resetar", command=resetar)
-reset.grid(pady=4)
-
-tela.mainloop()
+ #Caso o programa seja importado como um módulo, ele não executará automaticamente.
+if __name__ == "__main":
+    app = GeradorSenhas()
+    app.rodar()
