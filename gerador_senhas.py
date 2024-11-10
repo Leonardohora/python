@@ -91,6 +91,6 @@ class GeradorSenhas:
         
 
  #Caso o programa seja importado como um módulo, ele não executará automaticamente.
-if __name__ == "__main":
+if __name__ == "__main__":
     app = GeradorSenhas()
     app.rodar()
