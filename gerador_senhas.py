@@ -1,4 +1,3 @@
-#importação das bibliotecas usadas
 import tkinter as tk
 import random as rd
 import string as str
@@ -12,6 +11,7 @@ class GeradorSenhas:
         self.tela.resizable(False, False)
         self.tela.title("Gerador de Senhas")
 
+        self.historico = []
         self.minusculo = tk.IntVar()
         self.maisculo = tk.IntVar()
         self.numero = tk.IntVar()
@@ -19,13 +19,13 @@ class GeradorSenhas:
         
         self.config_janela()
 
+
     def config_janela(self):
         
-        # Boas-vindas
         boas_vindas = tk.Label(self.tela, text="Bem-vindo ao Gerador de Senhas", bg="#008B8B", fg="#FFFFFF", font=("Helvetica", 16, "bold"))
         boas_vindas.grid(column=0, row=0, columnspan=2, pady=10)
 
-        # Instruções
+
         instrucoes = tk.Label(self.tela, text=(
             "Instruções:\n"
             "- Insira um número entre 8 e 20 caracteres.\n"
@@ -50,18 +50,19 @@ class GeradorSenhas:
 
         # Botão de gerar senha
         tk.Button(self.tela, text="Gerar Senha", command=self.gerar_senha, bg="#00CED1", fg="#000000", font=("Arial", 10, "bold"), width=15).grid(column=0, row=5, columnspan=2, pady=10)
-
-
+        tk.Button(self.tela,text="Limpar Histórico", command=self.limpar_historico).grid(column=0, row=9, sticky="w")
+        self.lista_historico = tk.Listbox(self.tela, height=5, width=40)
+        self.lista_historico.grid(column=0, row=10)
+    
     def gerar_senha(self):
         
+        #validações da senha.
         if not self.senha_comprimento.get().isnumeric() or int(self.senha_comprimento.get()) < 8 or int(self.senha_comprimento.get()) > 20:
             messagebox.showinfo("AVISO", "Insira apenas números entre 8 e 20.")
             return
-
         if not (self.minusculo.get() or self.maisculo.get() or self.numero.get() or self.simbolo.get()):
             messagebox.showinfo("AVISO", "Selecione pelo menos uma opção.")
             return
-        
         
         else:
             comprimento = int(self.senha_comprimento.get())
@@ -72,7 +73,6 @@ class GeradorSenhas:
             self.mostrar_senha = tk.Label(self.tela, text="", bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"))
             self.mostrar_senha.grid(column=1, row=6)
             
-            #outros Botões
             copia = tk.Button(self.tela, text="Copiar", command=self.copiar, bg="#1E90FF", fg="#FFFFFF")
             copia.grid(column=1, row=8, pady=5, sticky="e")
             
@@ -91,8 +91,15 @@ class GeradorSenhas:
 
             senha = ''.join(rd.choice(caracters) for _ in range(comprimento))
             self.mostrar_senha.config(text=f'{senha}')
+            self.historico.append(senha)
+            self.lista_historico.insert(tk.END, senha)
 
 
+    def limpar_historico(self):
+        self.historico.clear()
+        self.lista_historico.delete(0, tk.END)
+    
+    
     def copiar(self):
         self.tela.clipboard_clear()
         self.tela.clipboard_append(self.mostrar_senha["text"])
