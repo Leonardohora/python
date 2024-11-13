@@ -40,20 +40,29 @@ class GeradorSenhas:
 
         # Opções de senha (Checkboxes)
         tk.Checkbutton(self.tela, text="Letras minúsculas", variable=self.minusculo, 
-                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000").grid(column=0, row=3, sticky="w")
+                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=0, row=3, sticky="w")
         tk.Checkbutton(self.tela, text="Letras maiúsculas", variable=self.maisculo, 
-                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000").grid(column=1, row=3, sticky="e")
+                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=1, row=3, sticky="e")
         tk.Checkbutton(self.tela, text="Números", variable=self.numero, 
-                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000").grid(column=0, row=4, sticky="w")
+                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=0, row=4, sticky="w")
         tk.Checkbutton(self.tela, text="Símbolos", variable=self.simbolo, 
-                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000").grid(column=1, row=4, sticky="e")
-
+                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=1, row=4, sticky="e")
+        
+        self.botao_copiar = tk.Button(self.tela, text="Copiar", command=self.copiar, bg="#1E90FF", fg="#FFFFFF", font=("Arial", 10, "bold"))
+        self.botao_resetar = tk.Button(self.tela, text="Resetar", command=self.reset, bg="#FF4500", fg="#FFFFFF", font=("Arial", 10, "bold"))
+        
         # Botão de gerar senha
-        tk.Button(self.tela, text="Gerar Senha", command=self.gerar_senha, bg="#00CED1", fg="#000000", font=("Arial", 10, "bold"), width=15).grid(column=0, row=5, columnspan=2, pady=10)
-        tk.Button(self.tela,text="Limpar Histórico", command=self.limpar_historico).grid(column=0, row=9, sticky="w")
-        self.lista_historico = tk.Listbox(self.tela, height=5, width=40)
+        self.titulo_senha = tk.Label(self.tela, text="Sua senha:", bg="#2E2E2E", fg="#FFFFFF")
+        tk.Button(self.tela, text="Gerar Senha", command=self.gerar_senha, bg="#00CED1", fg="#000000", font=("Arial", 10, "bold"), activebackground="#008B8B" , width=15, relief="groove").grid(column=0, row=5, columnspan=2, pady=20)
+        tk.Button(self.tela,text="Limpar Histórico", command=self.limpar_historico, bg="#FF8C00", font=("Arial", 10, "bold"), activebackground="#FF4500").grid(column=0, row=11, sticky="ew",pady=4)
+        self.lista_historico = tk.Listbox(self.tela, height=10, width=30, bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"), activestyle="dotbox")
         self.lista_historico.grid(column=0, row=10)
-    
+        self.mostrar_senha = tk.Label(self.tela, text="", bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"))
+        
+        scroll = tk.Scrollbar(self.tela, orient="vertical", command=self.lista_historico.yview)
+        scroll.grid(column=0, row=10, sticky="nse")
+        self.lista_historico.config(yscrollcommand=scroll.set)
+        
     def gerar_senha(self):
         
         #validações da senha.
@@ -69,16 +78,10 @@ class GeradorSenhas:
             caracters = ''
         
             # Exibir senha gerada
-            tk.Label(self.tela, text="Sua senha:", bg="#2E2E2E", fg="#FFFFFF").grid(column=0, row=6, sticky="w")
-            self.mostrar_senha = tk.Label(self.tela, text="", bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"))
-            self.mostrar_senha.grid(column=1, row=6)
             
-            copia = tk.Button(self.tela, text="Copiar", command=self.copiar, bg="#1E90FF", fg="#FFFFFF")
-            copia.grid(column=1, row=8, pady=5, sticky="e")
+            self.titulo_senha.grid(column=0, row=6, sticky="w")
             
-            reseta = tk.Button(self.tela, text="Resetar", command=self.reset, bg="#FF4500", fg="#FFFFFF")
-            reseta.grid(column=0, row=8, pady=5, sticky="w")
-            
+            self.mostrar_senha.grid(column=1, row=6)  
             
             if self.minusculo.get():
                 caracters += str.ascii_lowercase
@@ -93,7 +96,10 @@ class GeradorSenhas:
             self.mostrar_senha.config(text=f'{senha}')
             self.historico.append(senha)
             self.lista_historico.insert(tk.END, senha)
-
+            
+            #botões copiar e resetar
+            self.botao_copiar.grid(column=1, row=8, pady=5, sticky="e")
+            self.botao_resetar.grid(column=0, row=8, pady=5, sticky="w")
 
     def limpar_historico(self):
         self.historico.clear()
@@ -113,6 +119,10 @@ class GeradorSenhas:
         self.numero.set(0)
         self.simbolo.set(0)
         self.mostrar_senha.config(text="")
+        
+        self.botao_copiar.grid_remove()
+        self.botao_resetar.grid_remove()
+        self.titulo_senha.grid_remove()
 
 
     def rodar(self):
