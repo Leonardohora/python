@@ -67,7 +67,7 @@ class GeradorSenhas:
         
         #validações da senha.
         if not self.senha_comprimento.get().isnumeric() or int(self.senha_comprimento.get()) < 8 or int(self.senha_comprimento.get()) > 20:
-            messagebox.showinfo("AVISO", "Insira apenas números entre 8 e 20.")
+            messagebox.showinfo("AVISO", "Insira números entre 8 e 20.")
             return
         if not (self.minusculo.get() or self.maisculo.get() or self.numero.get() or self.simbolo.get()):
             messagebox.showinfo("AVISO", "Selecione pelo menos uma opção.")
@@ -129,6 +129,49 @@ class GeradorSenhas:
         self.tela.mainloop()
 
 
+#Tela de login
+class LoginApp:
+    
+    def __init__(self):
+    
+        self.telalogin = tk.Tk()
+        self.telalogin.resizable(False, False)
+        self.telalogin.geometry("300x200")
+        self.janela_login()
+        
+        #login se senha autorizada a utilizar
+        self.login = "leonardo"
+        self.senha = "12345"
+        
+        
+    def janela_login(self):
+            
+        tk.Label(self.telalogin, text="Gerador de senhas", font=("arial", 20, "bold")).grid(column=0,columnspan=2, row=0, pady=20, padx=20)
+        tk.Label(self.telalogin,text="Login: ").grid(column=0, row=1, padx=20, pady=10)
+        self.entrar_login = tk.Entry(self.telalogin)
+        self.entrar_login.grid(column=1, row=1 ,sticky="n",pady=10)
+        tk.Label(self.telalogin,text="Senha:").grid(column=0, row=2, padx=20,pady=10)
+        self.entrar_senha = tk.Entry(self.telalogin)
+        self.entrar_senha.grid(column=1, row=2,pady=10)
+        self.logar = tk.Button(self.telalogin, text="Entrar", command=self.entrar)
+        self.logar.grid(column=1, row=3, sticky="en", pady=2)
+    
+    
+    def entrar(self):
+        if self.entrar_login.get() == self.login and self.entrar_senha.get() == self.senha:
+            self.telalogin.destroy()
+            GeradorSenhas().rodar()
+            #from gerador_senhas import GeradorSenhas
+            #GeradorSenhas().rodar()
+            
+        else:
+            messagebox.showwarning("AVISO", "Login ou senha estão incorretos")
+    
+    
+    def rodar_login(self):
+        self.telalogin.mainloop()
+
+
 if __name__ == "__main__":
-    app = GeradorSenhas()
-    app.rodar() 
+    lg = LoginApp()
+    lg.rodar_login() 
