@@ -38,7 +38,7 @@ class GeradorSenhas:
         self.senha_comprimento = tk.Entry(self.tela, width=10)
         self.senha_comprimento.grid(column=1, row=2, pady=5, sticky="e")
 
-        # Opções de senha (Checkboxes)
+        # Opções de senha
         tk.Checkbutton(self.tela, text="Letras minúsculas", variable=self.minusculo, 
                        bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=0, row=3, sticky="w")
         tk.Checkbutton(self.tela, text="Letras maiúsculas", variable=self.maisculo, 
