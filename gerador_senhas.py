@@ -54,6 +54,7 @@ class GeradorSenhas:
         # Botão de gerar senha
         self.titulo_senha = tk.Label(self.tela, text="Sua senha:", bg="#2E2E2E", fg="#FFFFFF")
         tk.Button(self.tela, text="Gerar Senha", command=self.gerar_senha, bg="#00CED1", fg="#000000", font=("Arial", 10, "bold"), activebackground="#008B8B" , width=15, relief="groove").grid(column=0, row=5, columnspan=2, pady=20)
+        self.tela.bind("<Return>", self.gerar_senha)
         tk.Button(self.tela,text="Limpar Histórico", command=self.limpar_historico, bg="#FF8C00", font=("Arial", 10, "bold"), activebackground="#FF4500").grid(column=0, row=11, sticky="ew",pady=4)
         self.lista_historico = tk.Listbox(self.tela, height=10, width=30, bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"), activestyle="dotbox")
         self.lista_historico.grid(column=0, row=10)
@@ -63,7 +64,7 @@ class GeradorSenhas:
         scroll.grid(column=0, row=10, sticky="nse")
         self.lista_historico.config(yscrollcommand=scroll.set)
         
-    def gerar_senha(self):
+    def gerar_senha(self, event):
         
         #validações da senha.
         if not self.senha_comprimento.get().isnumeric() or int(self.senha_comprimento.get()) < 8 or int(self.senha_comprimento.get()) > 20:
@@ -132,11 +133,19 @@ class GeradorSenhas:
 #Tela de login
 class LoginApp:
     
+    #cores
+    letras =  "#DCDCDC"
+    cor_fundo = "#1C1C1C"
+    botoes = "#00BFFF"
+    
+    
     def __init__(self):
     
         self.telalogin = tk.Tk()
+        self.telalogin.configure(pady=3, padx=10, bg=self.cor_fundo)
         self.telalogin.resizable(False, False)
-        self.telalogin.geometry("300x200")
+        self.telalogin.title("Gerador de senhas")
+        self.telalogin.geometry("300x200+600+250")
         self.janela_login()
         
         #login se senha autorizada a utilizar
@@ -146,18 +155,19 @@ class LoginApp:
         
     def janela_login(self):
             
-        tk.Label(self.telalogin, text="Gerador de senhas", font=("arial", 20, "bold")).grid(column=0,columnspan=2, row=0, pady=20, padx=20)
-        tk.Label(self.telalogin,text="Login: ").grid(column=0, row=1, padx=20, pady=10)
+        tk.Label(self.telalogin, text="Gerador de senhas", font=("arial", 20, "bold"), bg="#2E2E2E", fg= self.letras).grid(column=0,columnspan=2, row=0, pady=20, padx=20)
+        tk.Label(self.telalogin,text="Login: ", bg="#2E2E2E", fg=self.letras).grid(column=0, row=1, padx=20, pady=10)
         self.entrar_login = tk.Entry(self.telalogin)
         self.entrar_login.grid(column=1, row=1 ,sticky="n",pady=10)
-        tk.Label(self.telalogin,text="Senha:").grid(column=0, row=2, padx=20,pady=10)
+        tk.Label(self.telalogin,text="Senha:", bg="#2E2E2E", fg=self.letras).grid(column=0, row=2, padx=20,pady=10)
         self.entrar_senha = tk.Entry(self.telalogin)
         self.entrar_senha.grid(column=1, row=2,pady=10)
-        self.logar = tk.Button(self.telalogin, text="Entrar", command=self.entrar)
-        self.logar.grid(column=1, row=3, sticky="en", pady=2)
+        self.logar = tk.Button(self.telalogin, text="Entrar", command=self.entrar, bg=self.botoes)
+        self.logar.grid(column=1, row=3, sticky="e", pady=2, padx=22)
+        self.telalogin.bind("<Return>", self.entrar)
     
     
-    def entrar(self):
+    def entrar(self, event):
         if self.entrar_login.get() == self.login and self.entrar_senha.get() == self.senha:
             self.telalogin.destroy()
             GeradorSenhas().rodar()
