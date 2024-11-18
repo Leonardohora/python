@@ -167,7 +167,7 @@ class LoginApp:
         self.telalogin.bind("<Return>", self.entrar)
     
     
-    def entrar(self, event):
+    def entrar(self, event=None):
         if self.entrar_login.get() == self.login and self.entrar_senha.get() == self.senha:
             self.telalogin.destroy()
             GeradorSenhas().rodar()
