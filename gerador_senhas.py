@@ -2,6 +2,7 @@ import tkinter as tk
 import random as rd
 import string as str
 from tkinter import messagebox
+from time import sleep
 
 letras =  "#DCDCDC"
 cor_fundo = "#1C1C1C"
@@ -17,6 +18,7 @@ class GeradorSenhas:
         self.tela.configure(pady=5, padx=10, bg="#2E2E2E")
         self.tela.resizable(False, False)
         self.tela.title("Gerador de Senhas")
+        self.tela.geometry("445x500+500+250")
 
         self.historico = []
         self.minusculo = tk.IntVar()
@@ -179,10 +181,10 @@ class LoginApp:
         self.entrar_senha = tk.Entry(self.telalogin, show="*")
         self.entrar_senha.grid(column=1, row=2,pady=10)
         self.logar = tk.Button(self.telalogin, text="Entrar", command=self.entrar, bg=self.botoes)
-        self.logar.grid(column=1, row=3, sticky="e", pady=2, padx=22)
+        self.logar.grid(column=1, row=3, sticky="e", pady=5, padx=22)
         self.telalogin.bind("<Return>", self.entrar)
         self.criar_usuario = tk.Button(self.telalogin, text="Criar usuario", command=self.mudar_para_criacao)
-        self.criar_usuario.grid(column=0, row=3)
+        self.criar_usuario.grid(column=0, row=3, pady=5)
     
     
     def mudar_para_criacao(self):
@@ -213,9 +215,8 @@ class CriarUsuario:
     botoes = "#00BFFF"
     
     def __init__(self):
-        
         self.tela_criar = tk.Tk()
-        self.tela_criar.configure(pady=3, padx=10)
+        self.tela_criar.configure(pady=3, padx=10, bg=cor_fundo)
         self.tela_criar.resizable(False, False)
         self.tela_criar.title("Gerador de senhas")
         self.tela_criar.geometry("300x200+600+250")
@@ -227,25 +228,56 @@ class CriarUsuario:
         LoginApp().rodar_login()
         
         
-        
     def criar_usuario(self):
         tk.Label(self.tela_criar, text="Crie um usuario", font=("arial", 20, "bold"), bg="#2E2E2E", fg= self.letras).grid(column=0,columnspan=2, row=0, pady=20, padx=20)
-        tk.Label(self.tela_criar,text="Login: ", bg="#2E2E2E", fg=self.letras).grid(column=0, row=1, padx=20, pady=10)
-        self.entrar_login = tk.Entry(self.tela_criar)
-        self.entrar_login.grid(column=1, row=1 ,sticky="n",pady=10)
+        tk.Label(self.tela_criar,text="Usuário: ", bg="#2E2E2E", fg=self.letras).grid(column=0, row=1, padx=20, pady=10)
+        self.criar_login = tk.Entry(self.tela_criar)
+        self.criar_login.grid(column=1, row=1 ,sticky="n",pady=10)
         tk.Label(self.tela_criar,text="Senha:", bg="#2E2E2E", fg=self.letras).grid(column=0, row=2, padx=20,pady=10)
-        self.entrar_senha = tk.Entry(self.tela_criar, show="*")
-        self.entrar_senha.grid(column=1, row=2,pady=10)
-        self.criar = tk.Button(self.tela_criar, text="Criar Usuario", command=self.mudar_para_login)
-        self.criar.grid(column=1, row=3, sticky="e", pady=2, padx=14)
+        self.criar_senha = tk.Entry(self.tela_criar, show="*")
+        self.criar_senha.grid(column=1, row=2,pady=10)
+        self.criar = tk.Button(self.tela_criar, text="Criar Usuario", command=self.login_criado)
+        self.criar.grid(column=1, row=3, sticky="e", pady=5, padx=10)
+        self.criar = tk.Button(self.tela_criar, text="Voltar para tela de login", command=self.mudar_para_login)
+        self.criar.grid(column=0, row=3, sticky="e", pady=5, padx=10)
 
+    
+    def login_criado(self):
         
+        comprimento = self.criar_senha.get()
+        
+        if  not self.criar_login.get().isalpha():
+            messagebox.showinfo("Aviso", "O login deve conter apenas Letras!")
+        
+        elif len(self.criar_senha.get()) < 8:
+            messagebox.showinfo("Aviso", "Sua senha deve conter acima de 8 Caraceters")
+        
+        else:
+
+            adm = tk.Tk()
+            adm.title("Verificação")
+            adm.configure(padx=5, pady=10 ,bg="red")
+            adm.resizable(False, False)
+            tk.Label(adm, text="Senha do Administrador:").grid(column=0, row=0, padx=5, pady=10)
+            senhadm = tk.Entry(adm)
+            senhadm.grid(column=1, row=0, padx=5, pady=10)
+            autorizar = tk.Button(adm,text="AUTORIZAR", command=confirmar_senha)
+            autorizar.grid(column=1, row=1, pady=3, padx=5)
+            
+            def confirmar_senha():
+                if senhadm.get() == "12345":
+                    adm.configure(padx=5, pady=10 ,bg="green")
+                    sleep(3)
+                    messagebox.showinfo("Aviso","Autorizado")
+
+    
+            adm.mainloop()       
+
         
     def rodar_criacao(self):
         self.tela_criar.mainloop()
 
     
-
 if __name__ == "__main__":
     lg = LoginApp()
     lg.rodar_login()
