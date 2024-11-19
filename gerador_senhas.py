@@ -3,7 +3,14 @@ import random as rd
 import string as str
 from tkinter import messagebox
 
+letras =  "#DCDCDC"
+cor_fundo = "#1C1C1C"
+botoes = "#00BFFF"
+    
+
 class GeradorSenhas:
+
+    
     def __init__(self):
         # tela e título
         self.tela = tk.Tk()
@@ -63,8 +70,10 @@ class GeradorSenhas:
         scroll = tk.Scrollbar(self.tela, orient="vertical", command=self.lista_historico.yview)
         scroll.grid(column=0, row=10, sticky="nse")
         self.lista_historico.config(yscrollcommand=scroll.set)
+        self.logout = tk.Button(self.tela, text="Fazer logout", command=self.mudar_para_login)
+        self.logout.grid(column=1, row=11, sticky="e")
         
-    def gerar_senha(self, event):
+    def gerar_senha(self, event=None):
         
         #validações da senha.
         if not self.senha_comprimento.get().isnumeric() or int(self.senha_comprimento.get()) < 8 or int(self.senha_comprimento.get()) > 20:
@@ -102,6 +111,7 @@ class GeradorSenhas:
             self.botao_copiar.grid(column=1, row=8, pady=5, sticky="e")
             self.botao_resetar.grid(column=0, row=8, pady=5, sticky="w")
 
+
     def limpar_historico(self):
         self.historico.clear()
         self.lista_historico.delete(0, tk.END)
@@ -112,6 +122,11 @@ class GeradorSenhas:
         self.tela.clipboard_append(self.mostrar_senha["text"])
         messagebox.showinfo("Informação", "Senha copiada para a área de transferência!")
 
+
+    def mudar_para_login(self):
+        self.tela.destroy()
+        LoginApp().rodar_login()
+        
 
     def reset(self):
         self.senha_comprimento.delete(0, tk.END)
@@ -132,7 +147,7 @@ class GeradorSenhas:
 
 #Tela de login
 class LoginApp:
-    
+        
     #cores
     letras =  "#DCDCDC"
     cor_fundo = "#1C1C1C"
@@ -140,7 +155,8 @@ class LoginApp:
     
     
     def __init__(self):
-    
+        
+        self.mudar = CriarUsuario.rodar_criacao    
         self.telalogin = tk.Tk()
         self.telalogin.configure(pady=3, padx=10, bg=self.cor_fundo)
         self.telalogin.resizable(False, False)
@@ -160,11 +176,18 @@ class LoginApp:
         self.entrar_login = tk.Entry(self.telalogin)
         self.entrar_login.grid(column=1, row=1 ,sticky="n",pady=10)
         tk.Label(self.telalogin,text="Senha:", bg="#2E2E2E", fg=self.letras).grid(column=0, row=2, padx=20,pady=10)
-        self.entrar_senha = tk.Entry(self.telalogin)
+        self.entrar_senha = tk.Entry(self.telalogin, show="*")
         self.entrar_senha.grid(column=1, row=2,pady=10)
         self.logar = tk.Button(self.telalogin, text="Entrar", command=self.entrar, bg=self.botoes)
         self.logar.grid(column=1, row=3, sticky="e", pady=2, padx=22)
         self.telalogin.bind("<Return>", self.entrar)
+        self.criar_usuario = tk.Button(self.telalogin, text="Criar usuario", command=self.mudar_para_criacao)
+        self.criar_usuario.grid(column=0, row=3)
+    
+    
+    def mudar_para_criacao(self):
+        self.telalogin.destroy()
+        CriarUsuario().rodar_criacao()
     
     
     def entrar(self, event=None):
@@ -182,6 +205,47 @@ class LoginApp:
         self.telalogin.mainloop()
 
 
+class CriarUsuario:
+    
+     #cores
+    letras =  "#DCDCDC"
+    cor_fundo = "#1C1C1C"
+    botoes = "#00BFFF"
+    
+    def __init__(self):
+        
+        self.tela_criar = tk.Tk()
+        self.tela_criar.configure(pady=3, padx=10)
+        self.tela_criar.resizable(False, False)
+        self.tela_criar.title("Gerador de senhas")
+        self.tela_criar.geometry("300x200+600+250")
+        self.criar_usuario()
+        
+    
+    def mudar_para_login(self):
+        self.tela_criar.destroy()
+        LoginApp().rodar_login()
+        
+        
+        
+    def criar_usuario(self):
+        tk.Label(self.tela_criar, text="Crie um usuario", font=("arial", 20, "bold"), bg="#2E2E2E", fg= self.letras).grid(column=0,columnspan=2, row=0, pady=20, padx=20)
+        tk.Label(self.tela_criar,text="Login: ", bg="#2E2E2E", fg=self.letras).grid(column=0, row=1, padx=20, pady=10)
+        self.entrar_login = tk.Entry(self.tela_criar)
+        self.entrar_login.grid(column=1, row=1 ,sticky="n",pady=10)
+        tk.Label(self.tela_criar,text="Senha:", bg="#2E2E2E", fg=self.letras).grid(column=0, row=2, padx=20,pady=10)
+        self.entrar_senha = tk.Entry(self.tela_criar, show="*")
+        self.entrar_senha.grid(column=1, row=2,pady=10)
+        self.criar = tk.Button(self.tela_criar, text="Criar Usuario", command=self.mudar_para_login)
+        self.criar.grid(column=1, row=3, sticky="e", pady=2, padx=14)
+
+        
+        
+    def rodar_criacao(self):
+        self.tela_criar.mainloop()
+
+    
+
 if __name__ == "__main__":
     lg = LoginApp()
-    lg.rodar_login() 
+    lg.rodar_login()
