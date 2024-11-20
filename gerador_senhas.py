@@ -72,7 +72,7 @@ class GeradorSenhas:
         scroll = tk.Scrollbar(self.tela, orient="vertical", command=self.lista_historico.yview)
         scroll.grid(column=0, row=10, sticky="nse")
         self.lista_historico.config(yscrollcommand=scroll.set)
-        self.logout = tk.Button(self.tela, text="Fazer logout", command=self.mudar_para_login)
+        self.logout = tk.Button(self.tela, text="Fazer logout", command=self.mudar_para_login, bg="red")
         self.logout.grid(column=1, row=11, sticky="e")
         
     def gerar_senha(self, event=None):
@@ -150,11 +150,8 @@ class GeradorSenhas:
 #Tela de login
 class LoginApp:
         
-    #cores
     letras =  "#DCDCDC"
-    cor_fundo = "#1C1C1C"
-    botoes = "#00BFFF"
-    
+    cor_fundo = "#1C1C1C"    
     
     def __init__(self):
         
@@ -180,7 +177,7 @@ class LoginApp:
         tk.Label(self.telalogin,text="Senha:", bg="#2E2E2E", fg=self.letras).grid(column=0, row=2, padx=20,pady=10)
         self.entrar_senha = tk.Entry(self.telalogin, show="*")
         self.entrar_senha.grid(column=1, row=2,pady=10)
-        self.logar = tk.Button(self.telalogin, text="Entrar", command=self.entrar, bg=self.botoes)
+        self.logar = tk.Button(self.telalogin, text="Entrar", command=self.entrar, bg=botoes)
         self.logar.grid(column=1, row=3, sticky="e", pady=5, padx=22)
         self.telalogin.bind("<Return>", self.entrar)
         self.criar_usuario = tk.Button(self.telalogin, text="Criar usuario", command=self.mudar_para_criacao)
@@ -206,13 +203,12 @@ class LoginApp:
     def rodar_login(self):
         self.telalogin.mainloop()
 
-
+#Criação de um usuário
 class CriarUsuario:
     
      #cores
     letras =  "#DCDCDC"
     cor_fundo = "#1C1C1C"
-    botoes = "#00BFFF"
     
     def __init__(self):
         self.tela_criar = tk.Tk()
@@ -236,10 +232,10 @@ class CriarUsuario:
         tk.Label(self.tela_criar,text="Senha:", bg="#2E2E2E", fg=self.letras).grid(column=0, row=2, padx=20,pady=10)
         self.criar_senha = tk.Entry(self.tela_criar, show="*")
         self.criar_senha.grid(column=1, row=2,pady=10)
-        self.criar = tk.Button(self.tela_criar, text="Criar Usuario", command=self.verificar_criacao)
+        self.criar = tk.Button(self.tela_criar, text="Criar Usuario", command=self.verificar_criacao, bg=botoes)
         self.criar.grid(column=1, row=3, sticky="e", pady=5, padx=10)
-        self.criar = tk.Button(self.tela_criar, text="Voltar para tela de login", command=self.mudar_para_login)
-        self.criar.grid(column=0, row=3, sticky="e", pady=5, padx=10)
+        self.voltar_login = tk.Button(self.tela_criar, text="Voltar para tela de login", command=self.mudar_para_login)
+        self.voltar_login.grid(column=0, row=3, sticky="e", pady=5, padx=10)
 
     
     def verificar_criacao(self):
@@ -254,25 +250,26 @@ class CriarUsuario:
             messagebox.showinfo("Aviso", "Sua senha deve conter acima de 8 Caraceters")
             return
         
+        self.tela_criar.destroy()
         self.popup_adm()
-      
+        
             
     def popup_adm(self):
         
         adm = tk.Tk()
         adm.title("Verificação")
-        adm.geometry("300x100+601+480")
-        adm.configure(padx=5, pady=10 ,bg="red")
+        adm.geometry("280x90+601+400")
+        adm.configure(padx=2, pady=10 ,bg="red")
         adm.resizable(False, False)
         
         tk.Label(adm, text="Senha do Administrador:").grid(column=0, row=0, padx=5, pady=10)
-        senhadm = tk.Entry(adm)
+        senhadm = tk.Entry(adm, show="*")
         senhadm.grid(column=1, row=0, padx=5, pady=10)
-        botao_autorizar = tk.Button(adm, text="AUTORIZAR", command=lambda: self.autorizar(adm, senhadm))
-        botao_autorizar.grid(column=1, row=1, pady=3, padx=5)
+        botao_autorizar = tk.Button(adm, text="AUTORIZAR", command=lambda: self.autorizar(adm, senhadm), bg=botoes)
+        botao_autorizar.grid(column=1, row=1, pady=3, padx=5, sticky="e")
     
         adm.mainloop()
-    
+        
                        
     def autorizar(self, adm, senhadm):
         
@@ -280,12 +277,12 @@ class CriarUsuario:
             adm.configure(padx=5, pady=10 ,bg="green")
             messagebox.showinfo("Aviso", "Login criado")
             adm.destroy()
-            sleep(2)
-            self.mudar_para_login()
+            sleep(1)
+            LoginApp().rodar_login()
         
         else:
             messagebox.showwarning("Aviso","Senha de usuário incorreta!")
-            
+    
     def rodar_criacao(self):
         self.tela_criar.mainloop()
 
