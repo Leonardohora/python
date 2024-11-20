@@ -236,44 +236,56 @@ class CriarUsuario:
         tk.Label(self.tela_criar,text="Senha:", bg="#2E2E2E", fg=self.letras).grid(column=0, row=2, padx=20,pady=10)
         self.criar_senha = tk.Entry(self.tela_criar, show="*")
         self.criar_senha.grid(column=1, row=2,pady=10)
-        self.criar = tk.Button(self.tela_criar, text="Criar Usuario", command=self.login_criado)
+        self.criar = tk.Button(self.tela_criar, text="Criar Usuario", command=self.verificar_criacao)
         self.criar.grid(column=1, row=3, sticky="e", pady=5, padx=10)
         self.criar = tk.Button(self.tela_criar, text="Voltar para tela de login", command=self.mudar_para_login)
         self.criar.grid(column=0, row=3, sticky="e", pady=5, padx=10)
 
     
-    def login_criado(self):
-        
-        comprimento = self.criar_senha.get()
-        
-        if  not self.criar_login.get().isalpha():
+    def verificar_criacao(self):
+        login = self.criar_login.get()
+        senha = self.criar_senha.get()
+                
+        if  not login.isalpha():
             messagebox.showinfo("Aviso", "O login deve conter apenas Letras!")
+            return
         
-        elif len(self.criar_senha.get()) < 8:
+        elif len(senha) < 8:
             messagebox.showinfo("Aviso", "Sua senha deve conter acima de 8 Caraceters")
+            return
+        
+        self.popup_adm()
+      
+            
+    def popup_adm(self):
+        
+        adm = tk.Tk()
+        adm.title("Verificação")
+        adm.geometry("300x100+601+480")
+        adm.configure(padx=5, pady=10 ,bg="red")
+        adm.resizable(False, False)
+        
+        tk.Label(adm, text="Senha do Administrador:").grid(column=0, row=0, padx=5, pady=10)
+        senhadm = tk.Entry(adm)
+        senhadm.grid(column=1, row=0, padx=5, pady=10)
+        botao_autorizar = tk.Button(adm, text="AUTORIZAR", command=lambda: self.autorizar(adm, senhadm))
+        botao_autorizar.grid(column=1, row=1, pady=3, padx=5)
+    
+        adm.mainloop()
+    
+                       
+    def autorizar(self, adm, senhadm):
+        
+        if senhadm.get() == "12345":
+            adm.configure(padx=5, pady=10 ,bg="green")
+            messagebox.showinfo("Aviso", "Login criado")
+            adm.destroy()
+            sleep(2)
+            self.mudar_para_login()
         
         else:
-
-            adm = tk.Tk()
-            adm.title("Verificação")
-            adm.configure(padx=5, pady=10 ,bg="red")
-            adm.resizable(False, False)
-            tk.Label(adm, text="Senha do Administrador:").grid(column=0, row=0, padx=5, pady=10)
-            senhadm = tk.Entry(adm)
-            senhadm.grid(column=1, row=0, padx=5, pady=10)
-            autorizar = tk.Button(adm,text="AUTORIZAR", command=confirmar_senha)
-            autorizar.grid(column=1, row=1, pady=3, padx=5)
+            messagebox.showwarning("Aviso","Senha de usuário incorreta!")
             
-            def confirmar_senha():
-                if senhadm.get() == "12345":
-                    adm.configure(padx=5, pady=10 ,bg="green")
-                    sleep(3)
-                    messagebox.showinfo("Aviso","Autorizado")
-
-    
-            adm.mainloop()       
-
-        
     def rodar_criacao(self):
         self.tela_criar.mainloop()
 
