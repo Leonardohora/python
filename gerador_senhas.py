@@ -18,7 +18,7 @@ class GeradorSenhas:
         self.tela.configure(pady=5, padx=10, bg="#2E2E2E")
         self.tela.resizable(False, False)
         self.tela.title("Gerador de Senhas")
-        self.tela.geometry("445x500+500+250")
+        self.tela.geometry("445x570+500+250")
 
         self.historico = []
         self.minusculo = tk.IntVar()
@@ -85,15 +85,14 @@ class GeradorSenhas:
             messagebox.showinfo("AVISO", "Selecione pelo menos uma opção.")
             return
         
+        
         else:
             comprimento = int(self.senha_comprimento.get())
             caracters = ''
         
             # Exibir senha gerada
-            
             self.titulo_senha.grid(column=0, row=6, sticky="w")
-            
-            self.mostrar_senha.grid(column=1, row=6)  
+            self.mostrar_senha.grid(columnspan=2, row=6, sticky="e")  
             
             if self.minusculo.get():
                 caracters += str.ascii_lowercase
@@ -256,32 +255,32 @@ class CriarUsuario:
             
     def popup_adm(self):
         
-        adm = tk.Tk()
-        adm.title("Verificação")
-        adm.geometry("280x90+601+400")
-        adm.configure(padx=2, pady=10 ,bg="red")
-        adm.resizable(False, False)
+        self.adm = tk.Tk()
+        self.adm.title("Verificação")
+        self.adm.geometry("280x90+601+400")
+        self.adm.configure(padx=2, pady=10 ,bg="red")
+        self.adm.resizable(False, False)
         
-        tk.Label(adm, text="Senha do Administrador:").grid(column=0, row=0, padx=5, pady=10)
-        senhadm = tk.Entry(adm, show="*")
-        senhadm.grid(column=1, row=0, padx=5, pady=10)
-        botao_autorizar = tk.Button(adm, text="AUTORIZAR", command=lambda: self.autorizar(adm, senhadm), bg=botoes)
-        botao_autorizar.grid(column=1, row=1, pady=3, padx=5, sticky="e")
+        tk.Label(self.adm, text="Senha do Administrador:").grid(column=0, row=0, padx=5, pady=10)
+        self.senhadm = tk.Entry(self.adm, show="*")
+        self.senhadm.grid(column=1, row=0, padx=5, pady=10)
+        self.botao_autorizar = tk.Button(self.adm, text="AUTORIZAR", command= self.adm.bind("<Return>", self.autorizar), bg=botoes)
+        self.botao_autorizar.grid(column=1, row=1, pady=3, padx=5, sticky="e")
     
-        adm.mainloop()
+        self.adm.mainloop()
         
                        
-    def autorizar(self, adm, senhadm):
+    def autorizar(self, event=None):
         
-        if senhadm.get() == "12345":
-            adm.configure(padx=5, pady=10 ,bg="green")
+        if self.senhadm.get() == "12345":
+            self.adm.configure(padx=5, pady=10 ,bg="green")
             messagebox.showinfo("Aviso", "Login criado")
-            adm.destroy()
+            self.adm.destroy()
             sleep(1)
             LoginApp().rodar_login()
         
         else:
-            messagebox.showwarning("Aviso","Senha de usuário incorreta!")
+            messagebox.showwarning("Aviso","Senha do ADM incorreta!")
     
     def rodar_criacao(self):
         self.tela_criar.mainloop()
