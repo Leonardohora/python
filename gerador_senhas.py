@@ -7,18 +7,22 @@ from time import sleep
 letras =  "#DCDCDC"
 cor_fundo = "#1C1C1C"
 botoes = "#00BFFF"
-    
+
 
 class GeradorSenhas:
-
-    
     def __init__(self):
-        # tela e título
+        # Tela e título
         self.tela = tk.Tk()
         self.tela.configure(pady=5, padx=10, bg="#2E2E2E")
         self.tela.resizable(False, False)
         self.tela.title("Gerador de Senhas")
         self.tela.geometry("445x570+500+250")
+        
+        # Configurar pesos para linhas e colunas
+        for i in range(12):  # 12 linhas no total
+            self.tela.grid_rowconfigure(i, weight=1)
+        for j in range(2):  # 2 colunas no total
+            self.tela.grid_columnconfigure(j, weight=1)
 
         self.historico = []
         self.minusculo = tk.IntVar()
@@ -28,56 +32,76 @@ class GeradorSenhas:
         
         self.config_janela()
 
-
     def config_janela(self):
-        
-        boas_vindas = tk.Label(self.tela, text="Bem-vindo ao Gerador de Senhas", bg="#008B8B", fg="#FFFFFF", font=("Helvetica", 16, "bold"))
-        boas_vindas.grid(column=0, row=0, columnspan=2, pady=10)
+        # Cabeçalho
+        boas_vindas = tk.Label(
+            self.tela, text="Bem-vindo ao Gerador de Senhas",
+            bg="#008B8B", fg="#FFFFFF", font=("Helvetica", 16, "bold")
+        )
+        boas_vindas.grid(column=0, row=0, columnspan=2, pady=10, sticky="nsew")
 
-
-        instrucoes = tk.Label(self.tela, text=(
-            "Instruções:\n"
-            "- Insira um número entre 8 e 20 caracteres.\n"
-            "- Escolha pelo menos uma opção abaixo."
-        ), fg="#FFD700", bg="#2E2E2E", font=("Arial", 10))
-        instrucoes.grid(column=0, row=1, columnspan=2, pady=5)
+        # Instruções
+        instrucoes = tk.Label(
+            self.tela, text=(
+                "Instruções:\n"
+                "- Insira um número entre 8 e 20 caracteres.\n"
+                "- Escolha pelo menos uma opção abaixo."
+            ),
+            fg="#FFD700", bg="#2E2E2E", font=("Arial", 10)
+        )
+        instrucoes.grid(column=0, row=1, columnspan=2, pady=5, sticky="nsew")
 
         # Comprimento da senha
         tk.Label(self.tela, text="Quantidade de caracteres:", bg="#2E2E2E", fg="#FFFFFF").grid(column=0, row=2, sticky="w")
-        self.senha_comprimento = tk.Entry(self.tela, width=10)
-        self.senha_comprimento.grid(column=1, row=2, pady=5, sticky="e")
+        self.senha_comprimento = tk.Entry(self.tela)
+        self.senha_comprimento.grid(column=1, row=2, sticky="e", pady=5)
 
         # Opções de senha
-        tk.Checkbutton(self.tela, text="Letras minúsculas", variable=self.minusculo, 
-                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=0, row=3, sticky="w")
-        tk.Checkbutton(self.tela, text="Letras maiúsculas", variable=self.maisculo, 
-                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=1, row=3, sticky="e")
-        tk.Checkbutton(self.tela, text="Números", variable=self.numero, 
-                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=0, row=4, sticky="w")
-        tk.Checkbutton(self.tela, text="Símbolos", variable=self.simbolo, 
-                       bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400").grid(column=1, row=4, sticky="e")
-        
+        tk.Checkbutton(
+            self.tela, text="Letras minúsculas", variable=self.minusculo,
+            bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400"
+        ).grid(column=0, row=3, sticky="w")
+        tk.Checkbutton(
+            self.tela, text="Letras maiúsculas", variable=self.maisculo,
+            bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400"
+        ).grid(column=1, row=3, sticky="e")
+        tk.Checkbutton(
+            self.tela, text="Números", variable=self.numero,
+            bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400"
+        ).grid(column=0, row=4, sticky="w")
+        tk.Checkbutton(
+            self.tela, text="Símbolos", variable=self.simbolo,
+            bg="#3CB371", fg="#FFFFFF", selectcolor="#008000", activebackground="#006400"
+        ).grid(column=1, row=4, sticky="e")
+
+        # Botão de gerar senha
+        tk.Button(
+            self.tela, text="Gerar Senha", command=self.gerar_senha,
+            bg="#00CED1", fg="#000000", font=("Arial", 10, "bold"),
+            activebackground="#008B8B", width=15, relief="groove"
+        ).grid(column=0, row=5, columnspan=2, pady=20, sticky="nsew")
+
+        # Exibir senha gerada
+        self.titulo_senha = tk.Label(self.tela, text="Sua senha:", bg="#2E2E2E", fg="#FFFFFF")
+        self.mostrar_senha = tk.Label(self.tela, text="", bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"))
+
+        # Lista de histórico com barra de rolagem
+        self.lista_historico = tk.Listbox(self.tela, bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"), activestyle="dotbox")
+        self.lista_historico.grid(column=0, row=10, columnspan=2, sticky="nsew", pady=5)
+        scroll = tk.Scrollbar(self.tela, orient="vertical", command=self.lista_historico.yview)
+        scroll.grid(column=1, row=10, sticky="nse")
+        self.lista_historico.config(yscrollcommand=scroll.set)
+
+        # Botões adicionais
         self.botao_copiar = tk.Button(self.tela, text="Copiar", command=self.copiar, bg="#1E90FF", fg="#FFFFFF", font=("Arial", 10, "bold"))
         self.botao_resetar = tk.Button(self.tela, text="Resetar", command=self.reset, bg="#FF4500", fg="#FFFFFF", font=("Arial", 10, "bold"))
-        
-        # Botão de gerar senha
-        self.titulo_senha = tk.Label(self.tela, text="Sua senha:", bg="#2E2E2E", fg="#FFFFFF")
-        tk.Button(self.tela, text="Gerar Senha", command=self.gerar_senha, bg="#00CED1", fg="#000000", font=("Arial", 10, "bold"), activebackground="#008B8B" , width=15, relief="groove").grid(column=0, row=5, columnspan=2, pady=20)
-        self.tela.bind("<Return>", self.gerar_senha)
-        tk.Button(self.tela,text="Limpar Histórico", command=self.limpar_historico, bg="#FF8C00", font=("Arial", 10, "bold"), activebackground="#FF4500").grid(column=0, row=11, sticky="ew",pady=4)
-        self.lista_historico = tk.Listbox(self.tela, height=10, width=30, bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"), activestyle="dotbox")
-        self.lista_historico.grid(column=0, row=10)
-        self.mostrar_senha = tk.Label(self.tela, text="", bg="#2E2E2E", fg="#FFD700", font=("Courier", 12, "bold"))
-        
-        scroll = tk.Scrollbar(self.tela, orient="vertical", command=self.lista_historico.yview)
-        scroll.grid(column=0, row=10, sticky="nse")
-        self.lista_historico.config(yscrollcommand=scroll.set)
+        tk.Button(self.tela, text="Limpar Histórico", command=self.limpar_historico, bg="#FF8C00", font=("Arial", 10, "bold"), activebackground="#FF4500").grid(column=0, row=11, sticky="ew", pady=4)
         self.logout = tk.Button(self.tela, text="Fazer logout", command=self.mudar_para_login, bg="red")
         self.logout.grid(column=1, row=11, sticky="e")
-        
+
     def gerar_senha(self, event=None):
         
-        #validações da senha.
+         #validações da senha.
         if not self.senha_comprimento.get().isnumeric() or int(self.senha_comprimento.get()) < 8 or int(self.senha_comprimento.get()) > 20:
             messagebox.showinfo("AVISO", "Insira números entre 8 e 20.")
             return
@@ -111,23 +135,20 @@ class GeradorSenhas:
             #botões copiar e resetar
             self.botao_copiar.grid(column=1, row=8, pady=5, sticky="e")
             self.botao_resetar.grid(column=0, row=8, pady=5, sticky="w")
-
+            
 
     def limpar_historico(self):
         self.historico.clear()
         self.lista_historico.delete(0, tk.END)
-    
-    
+
     def copiar(self):
         self.tela.clipboard_clear()
         self.tela.clipboard_append(self.mostrar_senha["text"])
         messagebox.showinfo("Informação", "Senha copiada para a área de transferência!")
 
-
     def mudar_para_login(self):
         self.tela.destroy()
         LoginApp().rodar_login()
-        
 
     def reset(self):
         self.senha_comprimento.delete(0, tk.END)
@@ -136,17 +157,14 @@ class GeradorSenhas:
         self.numero.set(0)
         self.simbolo.set(0)
         self.mostrar_senha.config(text="")
-        
         self.botao_copiar.grid_remove()
         self.botao_resetar.grid_remove()
         self.titulo_senha.grid_remove()
 
-
     def rodar(self):
         self.tela.mainloop()
+        
 
-
-#Tela de login
 class LoginApp:
         
     letras =  "#DCDCDC"
@@ -280,7 +298,7 @@ class CriarUsuario:
             LoginApp().rodar_login()
         
         else:
-            messagebox.showwarning("Aviso","Senha do ADM incorreta!")
+            messagebox.showwarning("Aviso", "Senha do ADM incorreta!")
     
     def rodar_criacao(self):
         self.tela_criar.mainloop()
