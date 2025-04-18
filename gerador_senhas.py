@@ -1,3 +1,5 @@
+print("Gerador de Senhas")
+
 import tkinter as tk
 import random as rd
 import string as str
